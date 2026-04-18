@@ -21,16 +21,18 @@ terminated_error = function(optim_instance) {
 #' @title Calculate which points are dominated
 #' @description
 #' Returns which points from a set are dominated by another point in the set.
+#' Internally calls [moocore::is_nondominated()] on the transposed matrix and
+#' negates the result.
 #'
 #' @param ymat (`matrix()`) \cr
 #'   A numeric matrix. Each column (!) contains one point.
 #'
-#' @useDynLib bbotk c_is_dominated
+#' @seealso [moocore::is_nondominated()]
 #' @return `logical()` with `TRUE` if a point (column of `ymat`) is dominated.
 #' @export
 is_dominated = function(ymat) {
   assert_matrix(ymat, mode = "double")
-  .Call(c_is_dominated, ymat, PACKAGE = "bbotk")
+  !moocore::is_nondominated(t(ymat))
 }
 
 #' @title Calculates the transformed x-values
